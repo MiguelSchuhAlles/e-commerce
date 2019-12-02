@@ -1,15 +1,17 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {connect} from 'react-redux';  //higher order component that lets us modify our component to have acess to redux objects
 
 import {auth} from '../../firebase/firebase.utils';
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
 //special sintax to import SVG file as React component. Could also be imported as an ordinary image and set as src of html element 
 import {ReactComponent as Logo} from '../../assets/crown.svg';  //https://facebook.github.io/create-react-app/docs/adding-images-fonts-and-files
 
 import './header.styles.scss';
 
-const Header = ({currentUser}) => (
+const Header = ({currentUser, hidden}) => (
     <div className='header'>
         <Link className='logo-container' to="/"> 
             <Logo className='logo'/>
@@ -23,12 +25,19 @@ const Header = ({currentUser}) => (
                 :
                 <Link className='option' to='/signin'> SIGN IN </Link>
             }
+            <CartIcon/>
         </div>
+        {
+            hidden ? null :
+            <CartDropdown />
+        }
     </div>
 );
 
-const mapStateToProps = state => ({
-    currentUser: state.currentUser
+//callback that is sent to the connect method to get the state from Reducer and map to props
+const mapStateToProps = ({user: {currentUser}, cart: {hidden}}) => ({
+    currentUser,
+    hidden
 })
 
 export default connect(mapStateToProps)(Header);
