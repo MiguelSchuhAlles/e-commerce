@@ -1,10 +1,13 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';  //higher order component that lets us modify our component to have acess to redux objects
+import {createStructuredSelector} from 'reselect';
 
 import {auth} from '../../firebase/firebase.utils';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+import {selectCartHidden, selectCartItems} from '../../redux/cart/cart.selectors';
+import {selectCurrentUser} from '../../redux/user/user.selector';
 
 //special sintax to import SVG file as React component. Could also be imported as an ordinary image and set as src of html element 
 import {ReactComponent as Logo} from '../../assets/crown.svg';  //https://facebook.github.io/create-react-app/docs/adding-images-fonts-and-files
@@ -35,9 +38,9 @@ const Header = ({currentUser, hidden}) => (
 );
 
 //callback that is sent to the connect method to get the state from Reducer and map to props
-const mapStateToProps = ({user: {currentUser}, cart: {hidden}}) => ({
-    currentUser,
-    hidden
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    hidden: selectCartHidden
 })
 
 export default connect(mapStateToProps)(Header);
